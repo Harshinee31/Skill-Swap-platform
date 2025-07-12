@@ -47,12 +47,10 @@ skill-swap-platform/
 1.  **Download or Clone** this repo:
    ```bash
    git clone https://github.com/your-username/skill-swap-platform.git
+
 2. Open the folder in VS Code or any editor
 3. Open index.html in your browser
 
-## Tech Stack
-Frontend: HTML, CSS, JavaScript
 
-Local Storage: Used for authentication & data persistence
 
 
