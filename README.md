@@ -29,19 +29,6 @@ A interactive web-based platform where users can **offer and request skills** th
 
 ---
 
-## 📂 Project Structure
-skill-swap-platform/
-├── index.html # Homepage showing skill profiles
-├── login.html # Login page for users
-├── register.html # Registration page for new users
-├── profile.html # Page to view selected user's profile
-├── user-profile.html # Page to view & edit your own profile
-├── swap-request.html # Form to request a skill swap
-├── swaps.html # Dashboard to view all swap requests
-├── style.css # All styling (colors, layout, design)
-├── script.js # JavaScript for profile rendering, filters, requests
-├── image.png # Default profile picture (can be replaced)
-└── README.md # Project documentation
 
 ## How to run
 1.  **Download or Clone** this repo:
