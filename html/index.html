@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Skill Swap Platform</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Skill Swap Platform</h1>
+    <div class="top-right">
+      <select id="availabilityFilter">
+        <option value="">Availability</option>
+        <option value="weekends">Weekends</option>
+        <option value="evenings">Evenings</option>
+      </select>
+      <input type="text" id="searchInput" placeholder="Search by skill..." />
+      <button id="searchBtn">Search</button>
+      <div id="authLinks" class="auth-buttons">
+  <button id="loginBtn">Login</button>
+  <button id="registerBtn">Register</button>
+
+  <img id="profileIcon" class="user-icon" src="image.png" style="display:none; cursor:pointer;" />
+</div>
+
+
+    </div>
+  </header>
+
+  <main>
+    <div id="profileList" class="profile-list"></div>
+    <div class="pagination" id="pagination"></div>
+  </main>
+
+ <script src="script.js"></script>
+<script>
+  const user = JSON.parse(localStorage.getItem("registeredUser"));
+const loginBtn = document.getElementById("loginBtn");
+const registerBtn = document.getElementById("registerBtn");
+const profileIcon = document.getElementById("profileIcon");
+
+if (user) {
+  loginBtn.textContent = "Logout";
+  registerBtn.style.display = "none";
+  profileIcon.style.display = "inline-block";
+  profileIcon.src = user.photo || "image.png"; // show your image
+
+  loginBtn.onclick = () => {
+    localStorage.removeItem("registeredUser");
+    alert("Logged out successfully!");
+    window.location.reload();
+  };
+
+  profileIcon.onclick = () => {
+    localStorage.setItem("selectedProfile", JSON.stringify(user));
+    window.location.href = "user-profile.html";
+  };
+} else {
+  loginBtn.textContent = "Login";
+  registerBtn.style.display = "inline-block";
+  profileIcon.style.display = "none";
+
+  loginBtn.onclick = () => window.location.href = "login.html";
+  registerBtn.onclick = () => window.location.href = "register.html";
+}
+
+</script>
+
+
+
+</body>
+</html>

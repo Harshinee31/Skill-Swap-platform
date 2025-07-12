@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Swap Requests | Skill Swap Platform</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Skill Swap Platform</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <img src="https://via.placeholder.com/30" alt="User Photo" class="user-icon" />
+    </nav>
+  </header>
+
+  <main>
+    <div class="filters">
+      <select id="statusFilter">
+        <option value="all">All</option>
+        <option value="pending">Pending</option>
+        <option value="accepted">Accepted</option>
+        <option value="rejected">Rejected</option>
+      </select>
+      <input type="text" id="searchInput" placeholder="Search by name or skill" />
+      <button onclick="renderRequests()">Search</button>
+    </div>
+
+    <div id="requestList"></div>
+
+    <div class="pagination">
+      <!-- Can implement pagination later -->
+    </div>
+  </main>
+
+  <script>
+    const currentUser = JSON.parse(localStorage.getItem("registeredUser")) || {};
+    const allRequests = JSON.parse(localStorage.getItem("swapRequests")) || [];
+
+    const requestList = document.getElementById("requestList");
+
+    function renderRequests() {
+      const filter = document.getElementById("statusFilter").value;
+      const search = document.getElementById("searchInput").value.toLowerCase();
+
+      const requests = allRequests.filter(r =>
+        (r.to === currentUser.name || r.from === currentUser.name) &&
+        (filter === "all" || r.status === filter) &&
+        (
+          r.to.toLowerCase().includes(search) ||
+          r.from.toLowerCase().includes(search) ||
+          r.mySkill.toLowerCase().includes(search) ||
+          r.theirSkill.toLowerCase().includes(search)
+        )
+      );
+
+      requestList.innerHTML = "";
+
+      requests.forEach((r, idx) => {
+        const card = document.createElement("div");
+        card.className = "profile-card";
+
+        card.innerHTML = `
+          <div class="profile-photo"></div>
+          <div class="profile-details">
+            <h3>${r.to === currentUser.name ? r.from : r.to}</h3>
+            <div><strong>Skill Offered:</strong> ${r.mySkill}</div>
+            <div><strong>Skill Wanted:</strong> ${r.theirSkill}</div>
+            <div><strong>Status:</strong> <span class="${r.status}">${capitalize(r.status)}</span></div>
+          </div>
+          <div>
+            ${r.to === currentUser.name && r.status === "pending" ? `
+              <button onclick="updateStatus(${idx}, 'accepted')">Accept</button>
+              <button onclick="updateStatus(${idx}, 'rejected')">Reject</button>
+            ` : ""}
+          </div>
+        `;
+
+        requestList.appendChild(card);
+      });
+    }
+
+    function updateStatus(index, newStatus) {
+      allRequests[index].status = newStatus;
+      localStorage.setItem("swapRequests", JSON.stringify(allRequests));
+      renderRequests();
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // Initial render
+    renderRequests();
+  </script>
+</body>
+</html>

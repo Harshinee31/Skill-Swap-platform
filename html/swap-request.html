@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Send Swap Request | Skill Swap Platform</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Skill Swap Platform</h1>
+    <button onclick="window.location.href='index.html'">Home</button>
+  </header>
+
+  <main>
+    <div class="swap-form-container">
+      <form id="swapForm">
+        <label for="mySkill">Choose one of your offered skills</label>
+        <select id="mySkill" required></select>
+
+        <label for="theirSkill">Choose one of their wanted skills</label>
+        <select id="theirSkill" required></select>
+
+        <label for="message">Message</label>
+        <textarea id="message" rows="4" required></textarea>
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    const profile = JSON.parse(localStorage.getItem("selectedProfile"));
+    const currentUser = JSON.parse(localStorage.getItem("registeredUser"));
+
+    if (!profile || !currentUser) {
+      alert("Missing profile or user info. Redirecting...");
+      window.location.href = "index.html";
+    }
+
+    const mySkillSelect = document.getElementById("mySkill");
+    const theirSkillSelect = document.getElementById("theirSkill");
+
+    // Populate user's offered skills
+    const mySkills = currentUser.skillsOffered || [];
+
+    if (mySkills.length === 0) {
+      const option = document.createElement("option");
+      option.value = "";
+      option.textContent = "No offered skills available";
+      option.disabled = true;
+      option.selected = true;
+      mySkillSelect.appendChild(option);
+    } else {
+      mySkills.forEach(skill => {
+        const option = document.createElement("option");
+        option.value = skill;
+        option.textContent = skill;
+        mySkillSelect.appendChild(option);
+      });
+    }
+
+    // Populate their wanted skills
+    const theirSkills = profile.skillsWanted || [];
+
+    if (theirSkills.length === 0) {
+      const option = document.createElement("option");
+      option.value = "";
+      option.textContent = "No wanted skills listed";
+      option.disabled = true;
+      option.selected = true;
+      theirSkillSelect.appendChild(option);
+    } else {
+      theirSkills.forEach(skill => {
+        const option = document.createElement("option");
+        option.value = skill;
+        option.textContent = skill;
+        theirSkillSelect.appendChild(option);
+      });
+    }
+
+    // Submit the swap request
+    document.getElementById("swapForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      if (mySkillSelect.value === "" || theirSkillSelect.value === "") {
+        alert("Please select valid skills to proceed.");
+        return;
+      }
+
+      const request = {
+        from: currentUser.name,
+        to: profile.name,
+        mySkill: mySkillSelect.value,
+        theirSkill: theirSkillSelect.value,
+        message: document.getElementById("message").value.trim(),
+        status: "pending"
+      };
+
+      const requests = JSON.parse(localStorage.getItem("swapRequests") || "[]");
+      requests.push(request);
+      localStorage.setItem("swapRequests", JSON.stringify(requests));
+
+      alert("Swap request submitted!");
+      window.location.href = "swaps.html";
+    });
+  </script>
+</body>
+</html>

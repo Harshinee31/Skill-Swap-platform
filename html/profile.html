@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile | Skill Swap Platform</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Skill Swap Platform</h1>
+    <button onclick="window.location.href='index.html'">Home</button>
+  </header>
+
+  <main>
+    <div class="profile-detail-box" id="profileBox">
+      <!-- Content will be inserted via JavaScript -->
+    </div>
+  </main>
+
+  <script>
+    const profile = JSON.parse(localStorage.getItem("selectedProfile"));
+    const currentUser = JSON.parse(localStorage.getItem("registeredUser"));
+
+    if (!profile) {
+      alert("No profile found. Redirecting...");
+      window.location.href = "index.html";
+    }
+
+    const container = document.getElementById("profileBox");
+
+    container.innerHTML = `
+      <div class="profile-left">
+        <h2>${profile.name}</h2>
+        <p><strong>Location:</strong> ${profile.location || "Not specified"}</p>
+        <p><strong>Availability:</strong> ${profile.availability || "Not specified"}</p>
+        <p><strong>Privacy:</strong> ${profile.isPrivate ? "Private" : "Public"}</p>
+        <div><strong>Skills Offered:</strong>
+          <div class="skill-tags">
+            ${profile.skillsOffered.map(skill => `<span>${skill}</span>`).join("")}
+          </div>
+        </div>
+        <div><strong>Skills Wanted:</strong>
+          <div class="skill-tags">
+            ${profile.skillsWanted.map(skill => `<span>${skill}</span>`).join("")}
+          </div>
+        </div>
+        ${currentUser && currentUser.email !== profile.email ? `
+          <button class="request-btn" onclick="window.location.href='swap-request.html'">Request Swap</button>
+        ` : ""}
+      </div>
+
+      <div class="profile-right">
+        <img class="profile-photo-lg" src="${profile.photo || 'image.png'}"" alt="Profile Photo">
+      </div>
+    `;
+  </script>
+</body>
+</html>

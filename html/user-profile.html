@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Profile | Skill Swap Platform</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Skill Swap Platform</h1>
+    <nav>
+      <a href="#" onclick="saveProfile()" style="color: green">Save</a>
+      <a href="#" onclick="loadProfile()" style="color: red">Discard</a>
+      <a href="swaps.html">Swap Requests</a>
+      <a href="index.html">Home</a>
+      <img src="https://via.placeholder.com/30" alt="User" class="user-icon" />
+    </nav>
+  </header>
+
+  <main>
+    <div class="profile-edit-box">
+      <label>Name</label>
+      <input type="text" id="nameInput" />
+
+      <label>Location</label>
+      <input type="text" id="locationInput" />
+
+      <label>Skills Offered (comma separated)</label>
+      <input type="text" id="skillsOfferedInput" />
+
+      <label>Skills Wanted (comma separated)</label>
+      <input type="text" id="skillsWantedInput" />
+
+      <label>Availability</label>
+      <select id="availabilityInput">
+        <option value="weekends">Weekends</option>
+        <option value="evenings">Evenings</option>
+        <option value="weekdays">Weekdays</option>
+      </select>
+
+      <label>Profile Visibility</label>
+      <select id="visibilityInput">
+        <option value="public">Public</option>
+        <option value="private">Private</option>
+      </select>
+
+      <label>Profile Photo URL (optional)</label>
+      <input type="text" id="photoInput" />
+
+      <div class="preview-photo">
+        <img id="previewImg" src="https://via.placeholder.com/100" alt="Preview" />
+        <p><small>Add/Edit Photo</small></p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function loadProfile() {
+      const user = JSON.parse(localStorage.getItem("registeredUser")) || {};
+
+      document.getElementById("nameInput").value = user.name || "";
+      document.getElementById("locationInput").value = user.location || "";
+      document.getElementById("skillsOfferedInput").value = (user.skillsOffered || []).join(", ");
+      document.getElementById("skillsWantedInput").value = (user.skillsWanted || []).join(", ");
+      document.getElementById("availabilityInput").value = user.availability || "weekends";
+      document.getElementById("visibilityInput").value = user.visibility || "public";
+      document.getElementById("photoInput").value = user.photo || "";
+
+      document.getElementById("previewImg").src = user.photo || "https://via.placeholder.com/100";
+    }
+
+    function saveProfile() {
+      const updatedUser = {
+        name: document.getElementById("nameInput").value.trim(),
+        location: document.getElementById("locationInput").value.trim(),
+        skillsOffered: document.getElementById("skillsOfferedInput").value.split(",").map(s => s.trim()).filter(Boolean),
+        skillsWanted: document.getElementById("skillsWantedInput").value.split(",").map(s => s.trim()).filter(Boolean),
+        availability: document.getElementById("availabilityInput").value,
+        visibility: document.getElementById("visibilityInput").value,
+        photo: document.getElementById("photoInput").value.trim()
+      };
+
+      localStorage.setItem("registeredUser", JSON.stringify(updatedUser));
+      alert("Profile saved!");
+      loadProfile(); // refresh preview
+    }
+
+    document.getElementById("photoInput").addEventListener("input", (e) => {
+      document.getElementById("previewImg").src = e.target.value || "https://via.placeholder.com/100";
+    });
+
+    // Load on page load
+    window.onload = loadProfile;
+  </script>
+</body>
+</html>
